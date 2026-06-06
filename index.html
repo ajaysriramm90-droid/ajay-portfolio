@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ajay Sri Ramm | Portfolio</title>
+    <style>
+        /* CSS Variables for a Cinematic, Golden-Hour Dark Mode */
+        :root {
+            --bg-color: #0a0a0a;
+            --text-main: #e0e0e0;
+            --text-muted: #888888;
+            --accent-gold: #f5b041;
+            --accent-glow: rgba(245, 176, 65, 0.2);
+            --card-bg: #111111;
+            --border-color: #222222;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Subtle Cinematic Film Grain Overlay */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background-image: url('data:image/svg+xml;utf8,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noiseFilter"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noiseFilter)"/%3E%3C/svg%3E');
+            opacity: 0.04;
+            pointer-events: none;
+            z-index: 999;
+        }
+
+        /* --- Scroll Animation Classes --- */
+        .hidden {
+            opacity: 0;
+            transform: translateY(60px);
+            transition: all 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+        
+        .hidden-left {
+            opacity: 0;
+            transform: translateX(-100px);
+            transition: all 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .hidden-right {
+            opacity: 0;
+            transform: translateX(100px);
+            transition: all 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .show {
+            opacity: 1;
+            transform: translate(0, 0);
+        }
+
+        /* --- Staggered Delays for Grid Items --- */
+        .delay-1 { transition-delay: 100ms; }
+        .delay-2 { transition-delay: 200ms; }
+        .delay-3 { transition-delay: 300ms; }
+
+        /* --- Section Styling --- */
+        section {
+            min-height: 100vh;
+            padding: 6rem 10%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        h1 {
+            font-size: 5rem;
+            letter-spacing: -2px;
+            margin-bottom: 1rem;
+        }
+
+        h2.accent {
+            color: var(--accent-gold);
+            font-size: 2rem;
+            font-weight: 400;
+            text-shadow: 0 0 20px var(--accent-glow);
+        }
+
+        .about-text {
+            font-size: 1.2rem;
+            max-width: 800px;
+            color: var(--text-muted);
+            margin-top: 2rem;
+        }
+
+        /* --- Grid & Cards --- */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            padding: 2rem;
+            border-radius: 12px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            border-color: var(--accent-gold);
+        }
+
+        .card h3 {
+            color: var(--accent-gold);
+            margin-bottom: 1rem;
+        }
+
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .tag {
+            background: #222;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            color: #ccc;
+        }
+    </style>
+</head>
+<body>
+
+    <section id="home">
+        <h1 class="hidden-left">B. [span_0](start_span)AJAY SRI RAMM[span_0](end_span)</h1>
+        <h2 class="accent hidden-right">Full Stack Developer</h2>
+        <p class="about-text hidden delay-1">
+            [span_1](start_span)I am a passionate Full Stack Developer with a strong focus on Java, TypeScript, and modern web technologies.[span_1](end_span) 
+            [span_2](start_span)Currently pursuing my Bachelor of Technology in Information Technology at Panimalar Engineering College Chennai City Campus, I enjoy building scalable web applications and solving real-world problems through code.[span_2](end_span)
+        </p>
+    </section>
+
+    <section id="projects">
+        <h2 class="accent hidden">Featured Projects</h2>
+        <div class="grid">
+            
+            <div class="card hidden delay-1">
+                [span_3](start_span)<h3>AjayShop - eCommerce Platform[span_3](end_span)</h3>
+                [span_4](start_span)<p>Built a full-stack eCommerce platform featuring a product catalog, shopping cart, order management system, and an admin dashboard with analytics.[span_4](end_span)</p>
+                <div class="tags">
+                    [span_5](start_span)<span class="tag">TypeScript[span_5](end_span)</span>
+                    [span_6](start_span)<span class="tag">React[span_6](end_span)</span>
+                    [span_7](start_span)<span class="tag">GraphQL[span_7](end_span)</span>
+                    [span_8](start_span)<span class="tag">PostgreSQL[span_8](end_span)</span>
+                </div>
+            </div>
+
+            <div class="card hidden delay-2">
+                [span_9](start_span)<h3>Hospital Management System[span_9](end_span)</h3>
+                [span_10](start_span)<p>Developed a full-stack system to streamline patient registration, appointment scheduling, and medical record management to improve operational efficiency.[span_10](end_span)</p>
+                <div class="tags">
+                    [span_11](start_span)<span class="tag">Python[span_11](end_span)</span>
+                    [span_12](start_span)<span class="tag">Flask[span_12](end_span)</span>
+                    [span_13](start_span)<span class="tag">PostgreSQL[span_13](end_span)</span>
+                </div>
+            </div>
+
+            <div class="card hidden delay-3">
+                [span_14](start_span)<h3>Personal Finance Tracker[span_14](end_span)</h3>
+                [span_15](start_span)<p>Built a full-stack MEAN stack application to help users manage income, expenses, and overall financial activity with real-time tracking and analytics.[span_15](end_span)</p>
+                <div class="tags">
+                    [span_16](start_span)<span class="tag">Angular[span_16](end_span)</span>
+                    [span_17](start_span)<span class="tag">Node.js[span_17](end_span)</span>
+                    [span_18](start_span)<span class="tag">MongoDB[span_18](end_span)</span>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <section id="experience">
+        <div class="hidden-left">
+            <h2 class="accent">Technical Arsenal</h2>
+            <p class="about-text" style="margin-bottom: 2rem;">
+                [span_19](start_span)Languages: Java, Python, TypeScript, JavaScript, HTML, CSS, SQL[span_19](end_span)<br>
+                [span_20](start_span)Databases: PostgreSQL, MongoDB, Firebase, Supabase, SQLite[span_20](end_span)<br>
+                [span_21](start_span)Tools: Docker, Git, GitHub, VS Code, Jupyter[span_21](end_span)
+            </p>
+        </div>
+
+        <div class="hidden-right delay-2">
+            <h2 class="accent">Internships</h2>
+            <div class="card" style="margin-top: 1rem;">
+                [span_22](start_span)<h3>Webpage UI Design Intern @ TCS iON[span_22](end_span)</h3>
+                <ul style="margin-left: 1.5rem; margin-top: 1rem; color: var(--text-muted);">
+                    [span_23](start_span)<li>Developed responsive web interfaces using HTML, CSS, and JavaScript[span_23](end_span)</li>
+                    [span_24](start_span)<li>Applied UI/UX principles to design user-friendly and visually consistent web pages[span_24](end_span)</li>
+                    [span_25](start_span)<li>Gained hands-on experience with modern front-end tools and frameworks[span_25](end_span)</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // --- Intersection Observer for Scroll Animations ---
+        // This triggers the 'show' class when elements enter the viewport
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('show');
+                } else {
+                    // Optional: remove this else block if you want the animations to only happen once
+                    entry.target.classList.remove('show');
+                }
+            });
+        }, {
+            threshold: 0.1, // Element triggers when 10% visible
+            rootMargin: "0px 0px -50px 0px" // Triggers slightly before it hits the bottom
+        });
+
+        // Target all elements with hidden classes
+        const hiddenElements = document.querySelectorAll('.hidden, .hidden-left, .hidden-right');
+        hiddenElements.forEach((el) => observer.observe(el));
+    </script>
+</body>
+</html>
