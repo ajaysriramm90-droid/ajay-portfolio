@@ -85,6 +85,18 @@
       border-color: var(--accent2);
     }
 
+    /* Hide custom cursor & trail on touch / mobile devices */
+    @media (pointer: coarse) {
+      body {
+        cursor: auto;
+      }
+      .cursor,
+      .cursor-ring,
+      #trailContainer {
+        display: none !important;
+      }
+    }
+
     /* NOISE OVERLAY */
     body::before {
       content: '';
@@ -2292,58 +2304,63 @@
       }
     })();
 
-    // ═══ MOUSE TRAIL ═══
-    (function createTrail() {
-      const trailContainer = document.getElementById('trailContainer');
-      const dots = [];
-      const numDots = 8;
-      for (let i = 0; i < numDots; i++) {
-        const dot = document.createElement('div');
-        dot.classList.add('trail-dot');
-        dot.style.opacity = (1 - i / numDots) * 0.4;
-        dot.style.width = (4 - i * 0.3) + 'px';
-        dot.style.height = dot.style.width;
-        trailContainer.appendChild(dot);
-        dots.push({ el: dot, x: 0, y: 0 });
-      }
-      let mouseX = 0, mouseY = 0;
-      document.addEventListener('mousemove', (e) => {
-        mouseX = e.clientX;
-        mouseY = e.clientY;
-      });
-      function animateTrail() {
-        let prevX = mouseX, prevY = mouseY;
-        dots.forEach((dot, i) => {
-          const speed = 0.3 - i * 0.02;
-          dot.x += (prevX - dot.x) * speed;
-          dot.y += (prevY - dot.y) * speed;
-          dot.el.style.left = dot.x + 'px';
-          dot.el.style.top = dot.y + 'px';
-          dot.el.style.transform = 'translate(-50%, -50%)';
-          prevX = dot.x;
-          prevY = dot.y;
-        });
-        requestAnimationFrame(animateTrail);
-      }
-      animateTrail();
-    })();
+    // ═══ MOUSE TRAIL & CURSOR (desktop/mouse only) ═══
+    const isTouchDevice = window.matchMedia('(pointer: coarse)').matches;
 
-    // ═══ CURSOR ═══
-    const cursor = document.getElementById('cursor');
-    const ring = document.getElementById('cursorRing');
-    let mx = 0, my = 0, rx = 0, ry = 0;
-    document.addEventListener('mousemove', (e) => {
-      mx = e.clientX; my = e.clientY;
-      cursor.style.left = mx + 'px';
-      cursor.style.top = my + 'px';
-    });
-    (function animRing() {
-      rx += (mx - rx) * 0.12;
-      ry += (my - ry) * 0.12;
-      ring.style.left = rx + 'px';
-      ring.style.top = ry + 'px';
-      requestAnimationFrame(animRing);
-    })();
+    if (!isTouchDevice) {
+      // ═══ MOUSE TRAIL ═══
+      (function createTrail() {
+        const trailContainer = document.getElementById('trailContainer');
+        const dots = [];
+        const numDots = 8;
+        for (let i = 0; i < numDots; i++) {
+          const dot = document.createElement('div');
+          dot.classList.add('trail-dot');
+          dot.style.opacity = (1 - i / numDots) * 0.4;
+          dot.style.width = (4 - i * 0.3) + 'px';
+          dot.style.height = dot.style.width;
+          trailContainer.appendChild(dot);
+          dots.push({ el: dot, x: 0, y: 0 });
+        }
+        let mouseX = 0, mouseY = 0;
+        document.addEventListener('mousemove', (e) => {
+          mouseX = e.clientX;
+          mouseY = e.clientY;
+        });
+        function animateTrail() {
+          let prevX = mouseX, prevY = mouseY;
+          dots.forEach((dot, i) => {
+            const speed = 0.3 - i * 0.02;
+            dot.x += (prevX - dot.x) * speed;
+            dot.y += (prevY - dot.y) * speed;
+            dot.el.style.left = dot.x + 'px';
+            dot.el.style.top = dot.y + 'px';
+            dot.el.style.transform = 'translate(-50%, -50%)';
+            prevX = dot.x;
+            prevY = dot.y;
+          });
+          requestAnimationFrame(animateTrail);
+        }
+        animateTrail();
+      })();
+
+      // ═══ CURSOR ═══
+      const cursor = document.getElementById('cursor');
+      const ring = document.getElementById('cursorRing');
+      let mx = 0, my = 0, rx = 0, ry = 0;
+      document.addEventListener('mousemove', (e) => {
+        mx = e.clientX; my = e.clientY;
+        cursor.style.left = mx + 'px';
+        cursor.style.top = my + 'px';
+      });
+      (function animRing() {
+        rx += (mx - rx) * 0.12;
+        ry += (my - ry) * 0.12;
+        ring.style.left = rx + 'px';
+        ring.style.top = ry + 'px';
+        requestAnimationFrame(animRing);
+      })();
+    }
 
     // ═══ NAV SCROLL ═══
     const nav = document.getElementById('nav');
