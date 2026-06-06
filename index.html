@@ -1630,133 +1630,158 @@
       justify-content: center;
       flex-direction: column;
       overflow: hidden;
-      perspective: 800px;
-    }
-
-    .loader-screen.implode {
-      animation: loaderImplode 0.8s cubic-bezier(0.6, 0, 0.4, 1) forwards;
-    }
-
-    @keyframes loaderImplode {
-      0% { transform: scale(1); opacity: 1; filter: brightness(1); }
-      40% { transform: scale(1.08); filter: brightness(2); }
-      100% { transform: scale(0); opacity: 0; filter: brightness(3); border-radius: 50%; visibility: hidden; }
     }
 
     .loader-screen.hidden {
       display: none;
     }
 
-    /* Vortex container */
-    .vortex {
+    /* Tunnel canvas sits behind the portal rings */
+    #tunnelCanvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    /* Portal wrapper — holds the spinning rings */
+    .portal {
       position: relative;
-      width: 320px;
-      height: 320px;
+      width: 280px;
+      height: 280px;
       display: flex;
       align-items: center;
       justify-content: center;
+      transition: transform 1s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.5s;
     }
 
-    /* Concentric spinning rings */
-    .vortex-ring {
+    /* When done, the portal expands massively — you fly through it */
+    .portal.warp {
+      transform: scale(12);
+      opacity: 0;
+    }
+
+    /* Each ring is an ellipse that spins in 3D */
+    .portal-ring {
       position: absolute;
       border-radius: 50%;
-      border: 1.5px solid transparent;
-      animation: vortexSpin linear infinite;
+      border: 2px solid;
+      animation: portalSpin linear infinite;
     }
 
-    .vortex-ring:nth-child(1) { width: 300px; height: 300px; border-color: rgba(0,255,224,0.06); animation-duration: 12s; }
-    .vortex-ring:nth-child(2) { width: 260px; height: 260px; border-color: rgba(0,255,224,0.10); animation-duration: 10s; animation-direction: reverse; }
-    .vortex-ring:nth-child(3) { width: 220px; height: 220px; border-color: rgba(123,92,250,0.12); animation-duration: 8s; }
-    .vortex-ring:nth-child(4) { width: 180px; height: 180px; border-color: rgba(0,255,224,0.18); animation-duration: 6s; animation-direction: reverse; }
-    .vortex-ring:nth-child(5) { width: 140px; height: 140px; border-color: rgba(123,92,250,0.22); animation-duration: 4.5s; }
-    .vortex-ring:nth-child(6) { width: 100px; height: 100px; border-color: rgba(0,255,224,0.30); animation-duration: 3s; animation-direction: reverse; }
-    .vortex-ring:nth-child(7) { width: 60px; height: 60px; border-color: rgba(255,77,109,0.25); animation-duration: 2s; }
+    .portal-ring:nth-child(1)  { width: 280px; height: 280px; border-color: rgba(0,255,224,0.07); animation-duration: 6s; }
+    .portal-ring:nth-child(2)  { width: 250px; height: 250px; border-color: rgba(123,92,250,0.10); animation-duration: 5s; animation-direction: reverse; }
+    .portal-ring:nth-child(3)  { width: 220px; height: 220px; border-color: rgba(0,255,224,0.14); animation-duration: 4.2s; }
+    .portal-ring:nth-child(4)  { width: 190px; height: 190px; border-color: rgba(255,77,109,0.12); animation-duration: 3.5s; animation-direction: reverse; }
+    .portal-ring:nth-child(5)  { width: 160px; height: 160px; border-color: rgba(0,255,224,0.20); animation-duration: 3s; }
+    .portal-ring:nth-child(6)  { width: 130px; height: 130px; border-color: rgba(123,92,250,0.25); animation-duration: 2.5s; animation-direction: reverse; }
+    .portal-ring:nth-child(7)  { width: 100px; height: 100px; border-color: rgba(0,255,224,0.32); animation-duration: 2s; }
+    .portal-ring:nth-child(8)  { width: 70px;  height: 70px;  border-color: rgba(255,77,109,0.28); animation-duration: 1.6s; animation-direction: reverse; }
+    .portal-ring:nth-child(9)  { width: 40px;  height: 40px;  border-color: rgba(0,255,224,0.40); animation-duration: 1.2s; }
 
-    /* Each ring has a glowing dot */
-    .vortex-ring::after {
+    /* 3D tilt each ring at a different angle for depth */
+    .portal-ring:nth-child(1)  { transform: rotateX(75deg) rotateZ(0deg); }
+    .portal-ring:nth-child(2)  { transform: rotateX(70deg) rotateZ(40deg); }
+    .portal-ring:nth-child(3)  { transform: rotateX(65deg) rotateZ(80deg); }
+    .portal-ring:nth-child(4)  { transform: rotateX(60deg) rotateZ(120deg); }
+    .portal-ring:nth-child(5)  { transform: rotateX(55deg) rotateZ(160deg); }
+    .portal-ring:nth-child(6)  { transform: rotateX(50deg) rotateZ(200deg); }
+    .portal-ring:nth-child(7)  { transform: rotateX(45deg) rotateZ(240deg); }
+    .portal-ring:nth-child(8)  { transform: rotateX(40deg) rotateZ(280deg); }
+    .portal-ring:nth-child(9)  { transform: rotateX(35deg) rotateZ(320deg); }
+
+    @keyframes portalSpin {
+      from { transform: rotateX(75deg) rotateZ(0deg); }
+      to   { transform: rotateX(75deg) rotateZ(360deg); }
+    }
+
+    /* Override spin per-ring with individual tilt preserved via CSS animation */
+    .portal-ring { animation-name: portalSpinGeneric; }
+    @keyframes portalSpinGeneric {
+      0%   { transform: rotateZ(0deg); filter: brightness(1); }
+      50%  { filter: brightness(1.4); }
+      100% { transform: rotateZ(360deg); filter: brightness(1); }
+    }
+
+    /* Glowing dot on each ring */
+    .portal-ring::after {
       content: '';
       position: absolute;
-      top: -3px;
+      top: -4px;
       left: 50%;
-      width: 6px;
-      height: 6px;
-      background: var(--accent);
+      width: 8px;
+      height: 8px;
       border-radius: 50%;
-      box-shadow: 0 0 12px var(--accent), 0 0 24px var(--accent);
+      background: var(--accent);
+      box-shadow: 0 0 10px var(--accent), 0 0 30px var(--accent), 0 0 60px rgba(0,255,224,0.3);
     }
-    .vortex-ring:nth-child(even)::after { background: var(--accent2); box-shadow: 0 0 12px var(--accent2), 0 0 24px var(--accent2); }
-    .vortex-ring:nth-child(7)::after { background: var(--accent3); box-shadow: 0 0 12px var(--accent3), 0 0 24px var(--accent3); }
+    .portal-ring:nth-child(even)::after { background: var(--accent2); box-shadow: 0 0 10px var(--accent2), 0 0 30px var(--accent2); }
+    .portal-ring:nth-child(4)::after,
+    .portal-ring:nth-child(8)::after { background: var(--accent3); box-shadow: 0 0 10px var(--accent3), 0 0 30px var(--accent3); }
 
-    @keyframes vortexSpin {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
+    /* Center glow core */
+    .portal-core {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(0,255,224,0.9), rgba(123,92,250,0.4), transparent);
+      box-shadow: 0 0 40px var(--accent), 0 0 80px var(--accent2), 0 0 120px rgba(0,255,224,0.2);
+      animation: corePulse 2s ease-in-out infinite;
+    }
+    @keyframes corePulse {
+      0%, 100% { transform: scale(1); box-shadow: 0 0 40px var(--accent), 0 0 80px var(--accent2); }
+      50% { transform: scale(1.5); box-shadow: 0 0 60px var(--accent), 0 0 120px var(--accent2), 0 0 160px rgba(255,77,109,0.3); }
     }
 
-    /* Zoom-in pulse to give depth */
-    .vortex {
-      animation: vortexZoom 3s ease-in-out infinite;
-    }
-    @keyframes vortexZoom {
-      0%, 100% { transform: scale(1) rotateX(0deg); }
-      50% { transform: scale(1.06) rotateX(8deg); }
-    }
-
-    /* Center initials */
-    .loader-initials {
+    /* Loader info below portal */
+    .loader-info {
       position: relative;
       z-index: 2;
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 2.4rem;
-      letter-spacing: 6px;
-      color: var(--accent);
-      text-shadow: 0 0 20px rgba(0,255,224,0.5), 0 0 60px rgba(0,255,224,0.2);
-      animation: initialsPulse 2s ease-in-out infinite;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 40px;
+      transition: opacity 0.4s;
     }
-    @keyframes initialsPulse {
-      0%, 100% { opacity: 1; text-shadow: 0 0 20px rgba(0,255,224,0.5), 0 0 60px rgba(0,255,224,0.2); }
-      50% { opacity: 0.7; text-shadow: 0 0 40px rgba(0,255,224,0.8), 0 0 80px rgba(123,92,250,0.4); }
-    }
+    .portal.warp ~ .loader-info { opacity: 0; }
 
-    /* Percentage counter */
     .loader-percent {
-      margin-top: 32px;
-      font-family: 'Space Mono', monospace;
-      font-size: 0.85rem;
-      letter-spacing: 6px;
-      color: var(--muted);
-    }
-    .loader-percent span {
-      color: var(--accent);
-      font-size: 1.6rem;
       font-family: 'Bebas Neue', sans-serif;
-      letter-spacing: 3px;
+      font-size: 3rem;
+      letter-spacing: 4px;
+      color: var(--accent);
+      text-shadow: 0 0 20px rgba(0,255,224,0.5);
+      line-height: 1;
+    }
+    .loader-percent small {
+      font-size: 1.2rem;
+      color: var(--muted);
+      font-family: 'Space Mono', monospace;
     }
 
-    /* Status text */
     .loader-status {
-      margin-top: 10px;
+      margin-top: 8px;
       font-family: 'Space Mono', monospace;
       font-size: 0.6rem;
-      letter-spacing: 4px;
+      letter-spacing: 5px;
       text-transform: uppercase;
       color: var(--muted);
-      opacity: 0.6;
+      opacity: 0.7;
     }
 
-    /* Radial glow behind vortex */
-    .vortex::before {
-      content: '';
-      position: absolute;
-      width: 400px;
-      height: 400px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(0,255,224,0.06) 0%, rgba(123,92,250,0.03) 40%, transparent 70%);
-      animation: glowPulse 3s ease-in-out infinite;
+    /* Screen flash when warping */
+    .loader-flash {
+      position: fixed;
+      inset: 0;
+      background: white;
+      z-index: 10001;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.15s;
     }
-    @keyframes glowPulse {
-      0%, 100% { transform: scale(1); opacity: 0.5; }
-      50% { transform: scale(1.15); opacity: 1; }
+    .loader-flash.flash {
+      opacity: 0.6;
     }
 
     /* Mouse trail dots */
@@ -1848,20 +1873,28 @@
 
 <body>
 
+  <!-- SCREEN FLASH -->
+  <div class="loader-flash" id="loaderFlash"></div>
+
   <!-- LOADER -->
   <div class="loader-screen" id="loader">
-    <div class="vortex">
-      <div class="vortex-ring"></div>
-      <div class="vortex-ring"></div>
-      <div class="vortex-ring"></div>
-      <div class="vortex-ring"></div>
-      <div class="vortex-ring"></div>
-      <div class="vortex-ring"></div>
-      <div class="vortex-ring"></div>
-      <div class="loader-initials">AS</div>
+    <canvas id="tunnelCanvas"></canvas>
+    <div class="portal" id="portal">
+      <div class="portal-ring"></div>
+      <div class="portal-ring"></div>
+      <div class="portal-ring"></div>
+      <div class="portal-ring"></div>
+      <div class="portal-ring"></div>
+      <div class="portal-ring"></div>
+      <div class="portal-ring"></div>
+      <div class="portal-ring"></div>
+      <div class="portal-ring"></div>
+      <div class="portal-core"></div>
     </div>
-    <div class="loader-percent"><span id="loaderCount">0</span>%</div>
-    <div class="loader-status" id="loaderStatus">INITIALIZING</div>
+    <div class="loader-info">
+      <div class="loader-percent" id="loaderPercent">0<small>%</small></div>
+      <div class="loader-status" id="loaderStatus">INITIALIZING</div>
+    </div>
   </div>
 
   <!-- PARTICLES -->
@@ -2379,33 +2412,99 @@
   </footer>
 
   <script>
-    // ═══ LOADER (Vortex Portal) ═══
-    (function vortexLoader() {
+    // ═══ TUNNEL STARFIELD (Canvas) ═══
+    (function tunnelEffect() {
+      const canvas = document.getElementById('tunnelCanvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      let W, H;
+      function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
+      resize();
+      window.addEventListener('resize', resize);
+
+      // Create stars flying toward viewer
+      const stars = [];
+      for (let i = 0; i < 200; i++) {
+        stars.push({
+          angle: Math.random() * Math.PI * 2,
+          radius: Math.random() * 0.5,
+          speed: 0.003 + Math.random() * 0.008,
+          size: 1 + Math.random() * 2,
+          color: ['#00ffe0', '#7b5cfa', '#ff4d6d', '#e8e8f0'][Math.floor(Math.random() * 4)]
+        });
+      }
+
+      let running = true;
+      function drawTunnel() {
+        if (!running) return;
+        ctx.fillStyle = 'rgba(5,5,8,0.15)';
+        ctx.fillRect(0, 0, W, H);
+
+        const cx = W / 2, cy = H / 2;
+        stars.forEach(s => {
+          s.radius += s.speed;
+          if (s.radius > 1.5) {
+            s.radius = 0;
+            s.angle = Math.random() * Math.PI * 2;
+          }
+          const dist = s.radius * Math.max(W, H) * 0.6;
+          const x = cx + Math.cos(s.angle) * dist;
+          const y = cy + Math.sin(s.angle) * dist;
+          const alpha = Math.min(s.radius * 3, 1);
+          const size = s.size * (0.5 + s.radius * 2);
+          ctx.beginPath();
+          ctx.arc(x, y, size, 0, Math.PI * 2);
+          ctx.fillStyle = s.color;
+          ctx.globalAlpha = alpha * 0.7;
+          ctx.fill();
+          // Draw streak
+          const streakLen = s.speed * 600 * s.radius;
+          const ex = x - Math.cos(s.angle) * streakLen;
+          const ey = y - Math.sin(s.angle) * streakLen;
+          ctx.beginPath();
+          ctx.moveTo(x, y);
+          ctx.lineTo(ex, ey);
+          ctx.strokeStyle = s.color;
+          ctx.globalAlpha = alpha * 0.3;
+          ctx.lineWidth = size * 0.5;
+          ctx.stroke();
+        });
+        ctx.globalAlpha = 1;
+        requestAnimationFrame(drawTunnel);
+      }
+      drawTunnel();
+
+      // Expose stop function
+      window._stopTunnel = () => { running = false; };
+    })();
+
+    // ═══ LOADER (Portal Warp) ═══
+    (function portalLoader() {
       const loader = document.getElementById('loader');
-      const countEl = document.getElementById('loaderCount');
+      const portal = document.getElementById('portal');
+      const percentEl = document.getElementById('loaderPercent');
       const statusEl = document.getElementById('loaderStatus');
+      const flashEl = document.getElementById('loaderFlash');
       const statuses = [
         { at: 0, text: 'INITIALIZING' },
-        { at: 20, text: 'LOADING ASSETS' },
-        { at: 45, text: 'BUILDING LAYOUT' },
-        { at: 70, text: 'RENDERING' },
+        { at: 15, text: 'OPENING PORTAL' },
+        { at: 35, text: 'LOADING ASSETS' },
+        { at: 55, text: 'BUILDING LAYOUT' },
+        { at: 75, text: 'RENDERING' },
         { at: 90, text: 'ALMOST THERE' },
-        { at: 100, text: 'WELCOME' }
+        { at: 100, text: 'ENTERING' }
       ];
-      let count = 0;
       let statusIdx = 0;
-      const duration = 2200; // ms to reach 100
+      const duration = 2800;
       const startTime = performance.now();
 
       function tick(now) {
         const elapsed = now - startTime;
         const progress = Math.min(elapsed / duration, 1);
-        // Ease-out cubic for smooth deceleration
         const eased = 1 - Math.pow(1 - progress, 3);
-        count = Math.floor(eased * 100);
-        countEl.textContent = count;
+        const count = Math.floor(eased * 100);
+        percentEl.innerHTML = count + '<small>%</small>';
 
-        // Update status text
         while (statusIdx < statuses.length - 1 && count >= statuses[statusIdx + 1].at) {
           statusIdx++;
           statusEl.textContent = statuses[statusIdx].text;
@@ -2414,13 +2513,20 @@
         if (progress < 1) {
           requestAnimationFrame(tick);
         } else {
-          // Implode animation then hide
+          // Warp: portal zooms to fill screen, flash, then hide
           setTimeout(() => {
-            loader.classList.add('implode');
-            loader.addEventListener('animationend', () => {
-              loader.classList.add('hidden');
-            });
-          }, 400);
+            statusEl.textContent = 'WELCOME';
+            portal.classList.add('warp');
+            // Flash at the peak
+            setTimeout(() => {
+              flashEl.classList.add('flash');
+              setTimeout(() => {
+                flashEl.classList.remove('flash');
+                loader.classList.add('hidden');
+                if (window._stopTunnel) window._stopTunnel();
+              }, 250);
+            }, 500);
+          }, 300);
         }
       }
 
